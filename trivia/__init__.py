@@ -15,7 +15,7 @@ from trivia import routes, api, utils
 
 # Setup a scheduler for automatically refreshing data
 scheduler = BackgroundScheduler()
+scheduler.start()
 scheduler.add_job(func=utils.refreshScores, trigger="interval", seconds=5)
 
 utils.refreshScores()
-
