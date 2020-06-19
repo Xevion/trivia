@@ -3,9 +3,12 @@ api.py
 
 Handles backend routes assisting
 """
+import json
+
 from flask import request
 
 from trivia import app
+from trivia.utils import lastModified
 
 
 @app.route("/api/changed")
@@ -18,8 +21,9 @@ def changed():
 
     TODO: Remove this function once a proper 304 Not Modified implementation is found for client side.
     """
-
-    time = request.args.get('last')
+    from trivia.utils import lastChange
+    time = int(request.args.get('last') or lastModified())
+    return json.dumps(lastChange < time)
 
 
 @app.route("/api/refresh")

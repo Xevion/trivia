@@ -12,10 +12,18 @@ from trivia import Team
 # Generate paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
+SCORES_FILE = os.path.join(DATA_DIR, 'scores.json')
 
 # Initialize global data/tracking vars
 lastChange: int = -1
 teams: List[Team] = []
+
+
+def lastModified() -> float:
+    """
+    returns epoch time of last modification to the scores file.
+    """
+    return os.stat(SCORES_FILE).st_mtime
 
 
 def refreshScores() -> None:
@@ -26,8 +34,7 @@ def refreshScores() -> None:
     """
 
     global lastChange
-    filepath = os.path.join(DATA_DIR, 'scores.json')
-    curChange = os.stat(filepath).st_mtime
+    curChange = lastModified()
 
     if lastChange < curChange:
         try:
@@ -35,7 +42,7 @@ def refreshScores() -> None:
             lastChange = curChange
 
             print('Attempting to load and parse scores file.')
-            with open(filepath) as file:
+            with open(SCORES_FILE) as file:
                 temp = json.load(file)
 
             # Place all values into Team object for jinja
