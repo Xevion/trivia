@@ -3,20 +3,20 @@ utils.py
 
 Stores important backend application functionality.
 """
-import os
 import json
+import os
 
-from typing import List
 from trivia import Team
 
 # Generate paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 
-data: List[Team] = None
+# data: List[Team] = []
+teams = []
 
 
-def refresh() -> None:
+def refreshScores() -> None:
     """
     Refreshes scores data safely.
 
@@ -31,14 +31,14 @@ def refresh() -> None:
         # Place all values into Team object for jinja
         temp = [
             Team(
-                rank=-1,
                 id=team['teamno'],
                 name=team['teamname'],
                 scores=team['scores']
             ) for team in temp
         ]
         print(f'Successfully loaded ({len(temp)} teams).')
-        data = temp
+        global teams
+        teams = temp
     # If invalid or inaccessible, simply do nothing.
     except json.JSONDecodeError:
         print('Scores file could not be opened or parsed.')
