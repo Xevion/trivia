@@ -11,9 +11,9 @@ from flask import request, make_response
 from trivia import app
 
 
-@app.route("/api/refresh")
-@app.route("/api/refresh/")
-def refresh():
+@app.route("/api/scores")
+@app.route("/api/scores/")
+def scores():
     """
     Used for refreshing client-side table data. Returns a JSON response with all data necessary to build the table.
     """
@@ -22,8 +22,8 @@ def refresh():
     # Create response using namedtuples
     r = make_response(json.dumps([team._asdict() for team in teams]))
     r.mimetype = 'application/json'
-
     status_code = 200
+
     # Try to handle If-Modified-Since header properly (304 Not Modified
     try:
         if request.headers['If-Modified-Since']:
@@ -34,6 +34,6 @@ def refresh():
     except KeyError:
         pass  # Header was not supplied. Ignore.
     except ValueError:
-        print('If-Modified-Since Header could not be parsed.')  # Header could not be parsed.
+        app.logger.warning('If-Modified-Since Header could not be parsed.')  # Header could not be parsed.
 
     return r, status_code

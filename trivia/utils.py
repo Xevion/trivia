@@ -7,7 +7,7 @@ import json
 import os
 from typing import List
 
-from trivia import Team
+from trivia import Team, app
 
 # Generate paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -41,7 +41,7 @@ def refreshScores() -> None:
             # Update tracking var
             lastChange = curChange
 
-            print('Attempting to load and parse scores file.')
+            app.logger.debug('Attempting to load and parse scores file.')
             with open(SCORES_FILE) as file:
                 temp = json.load(file)
 
@@ -53,11 +53,11 @@ def refreshScores() -> None:
                     scores=team['scores']
                 ) for team in temp
             ]
-            print(f'Successfully loaded ({len(temp)} teams).')
+            app.logger.debug(f'Successfully loaded ({len(temp)} teams).')
 
             global teams
             teams = temp
 
         # If invalid or inaccessible, simply do nothing.
         except json.JSONDecodeError:
-            print('Scores file could not be opened or parsed.')
+            app.logger.error('Scores file could not be opened or parsed.', print_exc=True)
