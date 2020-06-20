@@ -56,8 +56,10 @@ def refreshScores() -> bool:
             for i, team in enumerate(scores):
                 if i > 0 and scores[i - 1]['total'] == team['total']:
                     team['rank'] = scores[i - 1]['rank']
+                    if not team['rank'].startswith('T'):
+                        team['rank'] = 'T' + team['rank'].strip()
                 else:
-                    team['rank'] = i + 1
+                    team['rank'] = " " + str(i + 1)
 
             return True
     return False
