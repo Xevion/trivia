@@ -5,9 +5,14 @@ Stores important backend application functionality.
 """
 import json
 import os
+from collections import namedtuple
 from typing import List
 
-from trivia import Team, app
+# Simple fake 'class' for passing to jinja templates
+# from trivia import app
+from flask import current_app
+
+Team = namedtuple('Team', ['id', 'name', 'scores'])
 
 # Generate paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -41,7 +46,7 @@ def refreshScores() -> None:
             # Update tracking var
             lastChange = curChange
 
-            app.logger.debug('Attempting to load and parse scores file.')
+            current_app.logger.debug('Attempting to load and parse scores file.')
             with open(SCORES_FILE) as file:
                 temp = json.load(file)
 
@@ -53,11 +58,16 @@ def refreshScores() -> None:
                     scores=team['scores']
                 ) for team in temp
             ]
-            app.logger.debug(f'Successfully loaded ({len(temp)} teams).')
+            current_app.logger.debug(f'Successfully loaded ({len(temp)} teams).')
 
             global teams
             teams = temp
 
         # If invalid or inaccessible, simply do nothing.
         except json.JSONDecodeError:
-            app.logger.error('Scores file could not be opened or parsed.', print_exc=True)
+            current_app.logger.error('Scores file could not be opened or parsed.', print_exc=True)
+
+
+def generateDemo() -> None:
+    pass
+

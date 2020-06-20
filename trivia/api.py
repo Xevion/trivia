@@ -6,13 +6,11 @@ Handles backend routes assisting
 import json
 import time
 
-from flask import request, make_response
-
-from trivia import app
+from flask import request, make_response, current_app
 
 
-@app.route("/api/scores")
-@app.route("/api/scores/")
+@current_app.route("/api/scores")
+@current_app.route("/api/scores/")
 def scores():
     """
     Used for refreshing client-side table data. Returns a JSON response with all data necessary to build the table.
@@ -34,6 +32,6 @@ def scores():
     except KeyError:
         pass  # Header was not supplied. Ignore.
     except ValueError:
-        app.logger.warning('If-Modified-Since Header could not be parsed.')  # Header could not be parsed.
+        current_app.logger.warning('If-Modified-Since Header could not be parsed.')  # Header could not be parsed.
 
     return r, status_code

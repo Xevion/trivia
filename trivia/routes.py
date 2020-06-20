@@ -3,12 +3,10 @@ routes.py
 
 Handles user frontend routes.
 """
-from flask import render_template
-
-from trivia import app
+from flask import render_template, current_app
 
 
-@app.route("/")
+@current_app.route("/")
 def index():
     """
     Handles the frontend user index.
