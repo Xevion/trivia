@@ -56,8 +56,13 @@ def refreshScores() -> bool:
             for i, team in enumerate(scores):
                 if i > 0 and scores[i - 1]['total'] == team['total']:
                     team['rank'] = scores[i - 1]['rank']
+
                     if not team['rank'].startswith('T'):
                         team['rank'] = 'T' + team['rank'].strip()
+
+                    if not scores[i - 1]['rank'].startswith('T'):
+                        scores[i - 1]['rank'] = 'T' + scores[i - 1]['rank'].strip()
+
                 else:
                     team['rank'] = " " + str(i + 1)
 
@@ -72,9 +77,10 @@ def main(screen) -> None:
     :param screen: Curses screen
     """
 
+    screen.redrawwin()
     while True:
         # Refresh scores every 10 seconds
-        if time.time() - lastAttempt > 10:
+        if time.time() - lastAttempt > 1.5:
             refreshScores()
 
         # Get current terminal size and clear
@@ -84,16 +90,21 @@ def main(screen) -> None:
         # Build table data
         global scores
         table = [[team['rank'], team['id'], team['name'], team['total'], *team['scores']] for team in scores[:y - 4]]
-        scoreSet = map(str, range(1, len(scores[0]['scores']) + 1)) if scores else []
+        scoreSet = map(str, range(1, max(8, len(scores[0]['scores'])) + 1)) if scores else []
         table.insert(0, ['Rank', 'ID', 'Team Name', 'T', *scoreSet])
-        table = SingleTable(table)
+        table = SingleTable(table, title='EfTA Trivia Night')
+
+        for row in table.table_data:
+            pass
 
         # Show Table
         for i, stringRow in enumerate(table.table.split('\n')[:y]):
             screen.addstr(i, 0, stringRow[:x])
 
         # Terminal Size
-        screen.addstr(y - 1, 1, str((x, y)))
+        strpos = str((x, y))
+        screen.addstr(y - 1, 1, strpos)
+        screen.addstr(y - 1, 1 + len(strpos) + 1, f'({str(round(1.5 - (time.time() - lastAttempt), 3)).zfill(3)})')
 
         # Update curses screen
         screen.refresh()
