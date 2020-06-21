@@ -22,6 +22,7 @@ class Config(object):
     DEMO_ALTERATION_INTERVAL = 0
     DEMO_MAX_SCORES = 0
 
+
 class DemoConfig(Config):
     # Main Configuration
     SCORE_FILE = 'demo.json'

@@ -5,6 +5,7 @@ Stores important backend application functionality.
 """
 import json
 import os
+import time
 import random
 from collections import namedtuple
 from typing import List
@@ -21,7 +22,7 @@ DATA_DIR = os.path.join(BASE_DIR, 'data')
 SCORES_FILE = os.path.join(DATA_DIR, current_app.config['SCORE_FILE'])
 
 # Initialize global data/tracking vars
-lastChange: int = -1
+lastChange: float = -1
 teams: List[Team] = []
 
 

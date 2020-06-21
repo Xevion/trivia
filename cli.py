@@ -15,7 +15,7 @@ from terminaltables import SingleTable
 
 scores: List[dict] = []
 lastAttempt: float = -1
-lastUpdate: datetime = None
+lastUpdate: float = -1
 
 
 def refreshScores() -> bool:
@@ -30,7 +30,7 @@ def refreshScores() -> bool:
     global lastUpdate, lastAttempt, scores
 
     # Send with If-Modified-Since header if this is not the first time
-    headers = {'If-Modified-Since': lastUpdate.strftime('%a, %d %b %Y %I:%M:%S %Z')} if lastUpdate else {}
+    headers = {'If-Modified-Since': datetime.fromtimestamp(lastAttempt).strftime('%a, %d %b %Y %I:%M:%S')} if lastAttempt > 0 else {}
     # Send request with headers
     try:
         resp = requests.get('http://127.0.0.1:5000/api/scores/', headers=headers)
@@ -44,7 +44,7 @@ def refreshScores() -> bool:
             pass
         else:
             # Changes found, update!
-            lastUpdate = datetime.now(pytz.utc)
+            lastUpdate = time.time()
             scores = resp.json()
 
             # Calculate totals, preliminary sort by total
@@ -80,7 +80,7 @@ def main(screen) -> None:
     screen.redrawwin()
     while True:
         # Refresh scores every 10 seconds
-        if time.time() - lastAttempt > 1.5:
+        if time.time() - lastAttempt > 0.5:
             refreshScores()
 
         # Get current terminal size and clear
@@ -104,7 +104,7 @@ def main(screen) -> None:
         # Terminal Size
         strpos = str((x, y))
         screen.addstr(y - 1, 1, strpos)
-        screen.addstr(y - 1, 1 + len(strpos) + 1, f'({str(round(1.5 - (time.time() - lastAttempt), 3)).zfill(3)})')
+        screen.addstr(y - 1, 1 + len(strpos) + 1, f'({str(round(0.5 - (time.time() - lastAttempt), 3)).zfill(3)})')
 
         # Update curses screen
         screen.refresh()

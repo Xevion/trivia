@@ -6,6 +6,7 @@ Handles backend routes assisting
 import json
 import time
 
+from datetime import datetime
 from flask import request, make_response, current_app
 
 
@@ -26,12 +27,12 @@ def scores():
     try:
         if request.headers['If-Modified-Since']:
             # Acquire epoch time from header
-            epoch = time.mktime(time.strptime(request.headers['If-Modified-Since'], "%a, %d %b %Y %I:%M:%S %Z"))
-            if epoch < lastChange:
+            epoch = time.mktime(time.strptime(request.headers['If-Modified-Since'], "%a, %d %b %Y %I:%M:%S"))
+            if epoch >= lastChange:
                 status_code = 304
     except KeyError:
         pass  # Header was not supplied. Ignore.
     except ValueError:
-        current_app.logger.warning('If-Modified-Since Header could not be parsed.')  # Header could not be parsed.
+        current_app.logger.warning('If-Modified-Since Header could not be parsed.', exc_info=True)  # Header could not be parsed.
 
     return r, status_code
