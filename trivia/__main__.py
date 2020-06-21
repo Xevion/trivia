@@ -1,4 +1,4 @@
-from create_app import create_app
+from trivia.create_app import create_app
 
 if __name__ == '__main__':
     app = create_app()

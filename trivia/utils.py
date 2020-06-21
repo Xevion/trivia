@@ -9,7 +9,7 @@ from collections import namedtuple
 from typing import List
 
 # Simple fake 'class' for passing to jinja templates
-# from trivia import app
+import faker as faker
 from flask import current_app
 
 Team = namedtuple('Team', ['id', 'name', 'scores'])
@@ -17,7 +17,7 @@ Team = namedtuple('Team', ['id', 'name', 'scores'])
 # Generate paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
-SCORES_FILE = os.path.join(DATA_DIR, 'scores.json')
+SCORES_FILE = os.path.join(DATA_DIR, current_app.config['SCORE_FILE'])
 
 # Initialize global data/tracking vars
 lastChange: int = -1
@@ -41,33 +41,47 @@ def refreshScores() -> None:
     global lastChange
     curChange = lastModified()
 
-    if lastChange < curChange:
-        try:
-            # Update tracking var
-            lastChange = curChange
+    from trivia.create_app import scheduler
+    app = scheduler.app
 
-            current_app.logger.debug('Attempting to load and parse scores file.')
-            with open(SCORES_FILE) as file:
-                temp = json.load(file)
+    with app.app_context():
+        if lastChange < curChange:
+            try:
+                # Update tracking var
+                lastChange = curChange
 
-            # Place all values into Team object for jinja
-            temp = [
-                Team(
-                    id=team['teamno'],
-                    name=team['teamname'],
-                    scores=team['scores']
-                ) for team in temp
-            ]
-            current_app.logger.debug(f'Successfully loaded ({len(temp)} teams).')
+                current_app.logger.debug('Attempting to load and parse scores file.')
+                with open(SCORES_FILE, 'r') as file:
+                    temp = json.load(file)
 
-            global teams
-            teams = temp
+                # Place all values into Team object for jinja
+                temp = [
+                    Team(
+                        id=team['teamno'],
+                        name=team['teamname'],
+                        scores=team['scores']
+                    ) for team in temp
+                ]
+                current_app.logger.debug(f'Successfully loaded ({len(temp)} teams).')
 
-        # If invalid or inaccessible, simply do nothing.
-        except json.JSONDecodeError:
-            current_app.logger.error('Scores file could not be opened or parsed.', print_exc=True)
+                global teams
+                teams = temp
+
+            # If invalid or inaccessible, simply do nothing.
+            except json.JSONDecodeError:
+                current_app.logger.error('Scores file could not be opened or parsed.', print_exc=True)
 
 
 def generateDemo() -> None:
-    pass
+    fake = faker.Faker()
+    data = [
+        {
+            'teamno': i + 1,
+            'teamname': fake.user_name(),
+            'scores': []
+        } for i in range(current_app.config['DEMO_TEAM_COUNT'])
+    ]
+
+    with open(SCORES_FILE, 'w') as file:
+        json.dump(data, file)
 

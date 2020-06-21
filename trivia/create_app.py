@@ -1,9 +1,9 @@
-from apscheduler.schedulers.background import BackgroundScheduler
+from flask_apscheduler import APScheduler
 from flask import Flask
 
-from trivia import utils
 from trivia.config import configs
 
+scheduler: APScheduler = None
 
 def create_app(env=None):
     app = Flask(__name__)
@@ -12,12 +12,23 @@ def create_app(env=None):
         env = app.config['ENV']
     app.config.from_object(configs[env])
 
-    # Setup a scheduler for automatically refreshing data
-    scheduler = BackgroundScheduler()
-    scheduler.start()
-    scheduler.add_job(func=utils.refreshScores, trigger="interval", seconds=5)
-
     with app.app_context():
+        # noinspection PyUnresolvedReferences
+        from trivia import routes, api, utils
+
+        # Setup a scheduler for automatically refreshing data
+        global scheduler
+        scheduler = APScheduler()
+        scheduler.init_app(app)
+        scheduler.start()
+
+        # Add score file polling
+        scheduler.add_job(id='polling', func=utils.refreshScores, trigger="interval", seconds=app.config['POLLING_INTERVAL'])
+
+        if app.config['DEMO']:
+            app.logger.info('Generating Demo Data...')
+            utils.generateDemo()
+
         utils.refreshScores()
 
     return app

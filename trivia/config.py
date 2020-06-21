@@ -12,11 +12,21 @@ configs = {
 
 
 class Config(object):
+    # Main Configuration
     SCORE_FILE = 'scores.json'
-    DEMO = False
+    POLLING_INTERVAL = 5
 
+    # Demo Configuration
+    DEMO = False
+    DEMO_TEAM_COUNT = 0
+    DEMO_ALTERATION_INTERVAL = 0
 
 
 class DemoConfig(Config):
+    # Main Configuration
     SCORE_FILE = 'demo.json'
+
+    # Demo Configuration
     DEMO = True
+    DEMO_TEAM_COUNT = 30
+    DEMO_ALTERATION_INTERVAL = 15
