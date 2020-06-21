@@ -20,7 +20,7 @@ class Config(object):
     DEMO = False
     DEMO_TEAM_COUNT = 0
     DEMO_ALTERATION_INTERVAL = 0
-
+    DEMO_MAX_SCORES = 0
 
 class DemoConfig(Config):
     # Main Configuration
@@ -29,4 +29,5 @@ class DemoConfig(Config):
     # Demo Configuration
     DEMO = True
     DEMO_TEAM_COUNT = 30
-    DEMO_ALTERATION_INTERVAL = 15
+    DEMO_ALTERATION_INTERVAL = 3
+    DEMO_MAX_SCORES = 20

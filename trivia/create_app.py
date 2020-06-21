@@ -28,6 +28,7 @@ def create_app(env=None):
         if app.config['DEMO']:
             app.logger.info('Generating Demo Data...')
             utils.generateDemo()
+            scheduler.add_job(id='altering', func=utils.alterDemo, trigger="interval", seconds=app.config['DEMO_ALTERATION_INTERVAL'])
 
         utils.refreshScores()
 

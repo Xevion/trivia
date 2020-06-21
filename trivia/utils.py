@@ -5,6 +5,7 @@ Stores important backend application functionality.
 """
 import json
 import os
+import random
 from collections import namedtuple
 from typing import List
 
@@ -69,7 +70,7 @@ def refreshScores() -> None:
 
             # If invalid or inaccessible, simply do nothing.
             except json.JSONDecodeError:
-                current_app.logger.error('Scores file could not be opened or parsed.', print_exc=True)
+                current_app.logger.error('Scores file could not be opened or parsed.', exc_info=True)
 
 
 def generateDemo() -> None:
@@ -85,3 +86,22 @@ def generateDemo() -> None:
     with open(SCORES_FILE, 'w') as file:
         json.dump(data, file)
 
+
+def alterDemo() -> None:
+    from trivia.create_app import scheduler
+    app = scheduler.app
+
+    with app.app_context():
+        current_app.logger.debug('Altering Demo Data...')
+        with open(SCORES_FILE, 'r') as file:
+            data = json.load(file)
+
+        if len(data) > 0:
+            if len(data[0]['scores']) >= current_app.config['DEMO_MAX_SCORES']:
+                generateDemo()
+            else:
+                for team in data:
+                    team['scores'].append(random.randint(2, 8) if random.random() > 0.25 else 0)
+
+                with open(SCORES_FILE, 'w') as file:
+                    json.dump(data, file)
