@@ -4,7 +4,7 @@ A simple locally hosted Flask webapp supporting Trivia competitions.
 
 ## Setup
 
-Setup is designed to be as simple as possible with no configuration required. This webapp should only be locally acessible
+Setup is designed to be as simple as possible with no configuration required. This webapp should only be locally accessible
 on at `localhost:5000` unless
 
 ```
@@ -15,6 +15,14 @@ flask run
 ```
 
 Edit .flaskenv to change the configuration preset.
+
+The CLI clientside implementation can be ran with
+
+```
+python cli.py
+```
+
+and exited with `q`.
 
 ## Application Design
 
