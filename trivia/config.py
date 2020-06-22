@@ -6,6 +6,7 @@ config.py
 
 configs = {
     'production': 'trivia.config.Config',
+    'productiondep': 'trivia.config.ConfigDeprecated',
     'development': 'trivia.config.Config',
     'demo': 'trivia.config.DemoConfig'
 }
@@ -15,6 +16,8 @@ class Config(object):
     # Main Configuration
     SCORE_FILE = 'scores.json'
     POLLING_INTERVAL = 5
+    DEBUG = False
+    CONVERT_OLD = True
 
     # Demo Configuration
     DEMO = False
@@ -23,9 +26,14 @@ class Config(object):
     DEMO_MAX_SCORES = 0
 
 
+def ConfigDeprecated(Config):
+    CONVERT_OLD = True
+
+
 class DemoConfig(Config):
     # Main Configuration
     SCORE_FILE = 'demo.json'
+    DEBUG = True
 
     # Demo Configuration
     DEMO = True

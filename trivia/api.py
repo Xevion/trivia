@@ -27,7 +27,14 @@ def scores():
     try:
         if request.headers['If-Modified-Since']:
             # Acquire epoch time from header
-            epoch = time.mktime(time.strptime(request.headers['If-Modified-Since'], "%a, %d %b %Y %I:%M:%S"))
+            if current_app.config['DEBUG']:
+                print(request.headers['If-Modified-Since'])
+            epoch = datetime.strptime(request.headers['If-Modified-Since'], "%a, %d %b %Y %I:%M:%S %Z")
+            if current_app.config['DEBUG']:
+                print(epoch)
+            epoch = epoch.timestamp()
+            if current_app.config['DEBUG']:
+                print(epoch, lastChange, lastChange - epoch)
             if epoch >= lastChange:
                 status_code = 304
     except KeyError:

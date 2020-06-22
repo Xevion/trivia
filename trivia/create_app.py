@@ -1,9 +1,10 @@
-from flask_apscheduler import APScheduler
 from flask import Flask
+from flask_apscheduler import APScheduler
 
 from trivia.config import configs
 
 scheduler: APScheduler = None
+
 
 def create_app(env=None):
     app = Flask(__name__)
@@ -23,14 +24,16 @@ def create_app(env=None):
         scheduler.start()
 
         # Add score file polling
-        scheduler.add_job(id='polling', func=utils.refreshScores, trigger="interval", seconds=app.config['POLLING_INTERVAL'])
+        scheduler.add_job(id='polling', func=utils.refreshScores, trigger="interval",
+                          seconds=app.config['POLLING_INTERVAL'])
 
         if app.config['DEMO']:
             app.logger.info('Generating Demo Data...')
             # Generate initial Demo data
             utils.generateDemo()
             # Begin altering demo data regularly
-            scheduler.add_job(id='altering', func=utils.alterDemo, trigger="interval", seconds=app.config['DEMO_ALTERATION_INTERVAL'])
+            scheduler.add_job(id='altering', func=utils.alterDemo, trigger="interval",
+                              seconds=app.config['DEMO_ALTERATION_INTERVAL'])
 
         utils.refreshScores()
 

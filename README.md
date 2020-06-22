@@ -11,8 +11,10 @@ on at `localhost:5000` unless
 git clone https://github.com/Xevion/trivia.git
 cd trivia
 pip install -r requirements.txt
-python wsgi.py
+flask run
 ```
+
+Edit .flaskenv to change the configuration preset.
 
 ## Application Design
 

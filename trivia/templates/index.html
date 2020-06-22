@@ -86,7 +86,11 @@
     {% for team in teams %}
         <tr id="{{ team.id }}">
             <td>{{ range(1, teams | length) | random }}</td>
-            <td>{{ team.name }}</td>
+            {% if team.name | length > 0 %}
+                <td>{{ team.name }}</td>
+            {% else %}
+                <td>Team {{ team.id }}</td>
+            {% endif %}
             {% for score in team.scores %}
                 <td>{{ score }}</td>
             {% endfor %}

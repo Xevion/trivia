@@ -5,9 +5,10 @@ Stores important backend application functionality.
 """
 import json
 import os
-import time
 import random
+import time
 from collections import namedtuple
+from datetime import datetime
 from typing import List
 
 # Simple fake 'class' for passing to jinja templates
@@ -30,23 +31,22 @@ def lastModified() -> float:
     """
     returns epoch time of last modification to the scores file.
     """
-    return os.stat(SCORES_FILE).st_mtime
+    if current_app.config['DEBUG']:
+        print(datetime.fromtimestamp(os.path.getmtime(SCORES_FILE)), datetime.fromtimestamp(time.time()))
+    return os.path.getmtime(SCORES_FILE)
 
 
 def refreshScores() -> None:
     """
     Refreshes scores data safely.
-
-    :return:
     """
-
-    global lastChange
-    curChange = lastModified()
 
     from trivia.create_app import scheduler
     app = scheduler.app
-
     with app.app_context():
+        global lastChange
+        curChange = lastModified()
+
         if lastChange < curChange:
             try:
                 # Update tracking var
@@ -55,6 +55,8 @@ def refreshScores() -> None:
                 current_app.logger.debug('Attempting to load and parse scores file.')
                 with open(SCORES_FILE, 'r') as file:
                     temp = json.load(file)
+                    if current_app.config['CONVERT_OLD']:
+                        temp = convertFrom(temp)
 
                 # Place all values into Team object for jinja
                 temp = [
@@ -75,6 +77,10 @@ def refreshScores() -> None:
 
 
 def generateDemo() -> None:
+    """
+    Generate a base demo scores file. Overwrites the given SCORES_FILE.
+    """
+
     fake = faker.Faker()
     data = [
         {
@@ -85,17 +91,22 @@ def generateDemo() -> None:
     ]
 
     with open(SCORES_FILE, 'w') as file:
-        json.dump(data, file)
+        json.dump(convertTo(data) if current_app.config['CONVERT_OLD'] else data, file)
 
 
 def alterDemo() -> None:
+    """
+    Alters the current scores file. Intended for demo application mode.
+    Adds a new score each alteration. Triggers a application fresh with 'refreshScores'
+    """
+
     from trivia.create_app import scheduler
     app = scheduler.app
 
     with app.app_context():
         current_app.logger.debug('Altering Demo Data...')
         with open(SCORES_FILE, 'r') as file:
-            data = json.load(file)
+            data = convertFrom(json.load(file)) if current_app.config['CONVERT_OLD'] else json.load(file)
 
         if len(data) > 0:
             if len(data[0]['scores']) >= current_app.config['DEMO_MAX_SCORES']:
@@ -105,4 +116,41 @@ def alterDemo() -> None:
                     team['scores'].append(random.randint(2, 8) if random.random() > 0.25 else 0)
 
                 with open(SCORES_FILE, 'w') as file:
-                    json.dump(data, file)
+                    json.dump(convertTo(data) if current_app.config['CONVERT_OLD'] else data, file)
+
+                refreshScores()
+
+
+def convertFrom(data) -> List[dict]:
+    """
+    Converts scores data from old to new format.
+
+    :param data: Old format data
+    :return: Old format data
+    """
+    return [
+        {
+            'teamno': oldteam['Team']['Number'],
+            'teamname': oldteam['Team']['DisplayName'],
+            'scores': oldteam['Scores']
+        }
+        for oldteam in data
+    ]
+
+
+def convertTo(data) -> List[dict]:
+    """
+    Converst scores from new to old format
+    :param data: New format data
+    :return: Old format data
+    """
+    return [
+        {
+            'Team': {
+                'Number': team['teamno'],
+                'DisplayName': team['teamname']
+            },
+            'Scores': team['scores'],
+            'TotalGuess': -1
+        } for team in data
+    ]
