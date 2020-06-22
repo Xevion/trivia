@@ -71,6 +71,10 @@ def refreshScores() -> None:
                     # Otherwise just add a space in front instead
                     team['rank'] = " " + str(i + 1)
 
+                # Check for empty team name
+                if not team['name']:
+                    team['name'] = f'Team {team["id"]}'
+
 
 def main(screen) -> None:
     """
