@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" type="text/css" href="../static/style.css"/>
     <meta charset="UTF-8">
     <title>Index</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -10,34 +11,54 @@
   url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
 </head>
 <body>
-
-<table>
-    <thead>
-    <tr>
-        <th>Rank</th>
-        <th>ID</th>
-        <th>Team Name</th>
-        {% for i in range(scoreCount) %}
-            <th>{{ i + 1 }}</th>
-        {% endfor %}
-    </tr>
-    </thead>
-    <tbody>
-    {% for team in teams %}
-        <tr>
-            <td>{{ range(1, teams | length) | random }}</td>
-            <td>{{ team.id }}</td>
-            {% if team.name | length > 0 %}
-                <td>{{ team.name }}</td>
-            {% else %}
-                <td>Team {{ team.id }}</td>
-            {% endif %}
-            {% for score in team.scores %}
-                <td>{{ score }}</td>
+    <div class="topnav" style="height: 1.5rem; float: right">
+        <a class="toggle-autoscroll">Disable Autoscroll</a>
+        <a class="toggle-autorefresh">Enable Autorefresh</a>
+    </div>
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>ID</th>
+                <th>Team Name</th>
+                {% for i in range(scoreCount) %}
+                    <th>{{ i + 1 }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for team in teams %}
+                <tr class="team-row">
+                    <td>{{ range(1, teams | length) | random }}</td>
+                    <td>{{ team.id }}</td>
+                    {% if team.name | length > 0 %}
+                        <td>{{ team.name }}</td>
+                    {% else %}
+                        <td class="team-silent">Team {{ team.id }}</td>
+                    {% endif %}
+                    {% for score in team.scores %}
+                        <td>{{ score }}</td>
+                    {% endfor %}
+                </tr>
             {% endfor %}
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+            </tbody>
+        </table>
+    </div>
 </body>
+<script>
+    SCROLL_INTERVAL = 1500;
+
+    function ScrollOnce(autoscroll) {
+        $(".team-row:first").appendTo("tbody")
+
+        if (autoscroll) {
+            setTimeout(function () {
+                ScrollOnce(true)
+            }, SCROLL_INTERVAL)
+        }
+    }
+
+    ScrollOnce(true);
+</script>
 </html>
