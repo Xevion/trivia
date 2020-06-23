@@ -1,0 +1,45 @@
+table {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+th, td {
+    font-family: Calibri, serif;
+    font-size: large;
+    font-weight: bold;
+    /*padding: 5px;*/
+    text-align: left;
+}
+
+thead {
+    background-color: #333;
+    color: #f6f6f6;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #DDD;
+}
+
+th {
+    padding-left: 1rem;
+}
+
+th, td {
+    font-size: 300%;
+    padding-left: 1rem;
+    width: 1rem;
+}
+
+th, td > div {
+    height: 10%;
+    overflow: hidden;
+}
+
+th, td {
+    height: 20px;
+}
