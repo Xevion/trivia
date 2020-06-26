@@ -14,11 +14,11 @@ let REFRESH_TIMEOUT;
 function ScrollOnce(autoscroll) {
     // If autoscroll has been disabled in between timer, this if statement will prevent it from executing.
     if (AUTOSCROLL)
-        $(".team-row:first").appendTo("tbody")
+        $(".ui-row:first").appendTo("tbody")
 
     // Restart autoscroll as needed.
     if (autoscroll && AUTOSCROLL) {
-        setTimeout(function () {
+        SCROLL_TIMEOUT = setTimeout(function () {
             ScrollOnce(true)
         }, SCROLL_INTERVAL)
     }
@@ -30,9 +30,13 @@ function ToggleAutoscroll() {
     if (AUTOSCROLL) {
         $(".js-scroll-row-start").hide();
         $(".js-scroll-row-stop").show();
+
+        ScrollOnce(true);
     } else {
         $(".js-scroll-row-start").show();
         $(".js-scroll-row-stop").hide();
+
+        clearTimeout(SCROLL_TIMEOUT);
     }
 }
 

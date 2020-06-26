@@ -19,6 +19,7 @@ tr[data-row-index="0"] td { border-top: 0.25em solid #000; }
 .center { text-align: center; }
 .pointer { cursor: pointer; }
 .right { text-align: right; }
+.rank-pad { padding-left: 0.3em; padding-right: 0.2em;}
 .small-no-wrap { white-space: nowrap; width: 1%; }
 
 .callout { border: 1px solid transparent; margin-bottom: 0.5em; padding: 0.5em; }
