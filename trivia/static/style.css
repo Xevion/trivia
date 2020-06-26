@@ -13,7 +13,7 @@ body { font-family: Calibri, Arial, sans-serif; margin: 0; padding: 0; position:
 tr[data-row-index="0"] td { border-top: 0.25em solid #000; }
 
 .ui-header { background-color: #b51329; border-bottom: 2px solid #27233a; color: #fff; padding: 0.5em 1em; }
-.ui-content { padding: 0.5em 1em; }
+/*.ui-content { padding: 0.5em 1em; }*/
 .ui-footer { }
 
 .center { text-align: center; }
@@ -36,25 +36,3 @@ tr[data-row-index="0"] td { border-top: 0.25em solid #000; }
 .table-striped > tbody > tr.has-warning:nth-child(odd) { background-color: #faf2cc; border-color: #f8e5be; }
 .table-hover > tbody > tr:hover { background-color: #e0e0e0; } /* hover needs to come after striped so that striped rows have hover */
 .table-hover > tbody > tr.has-warning:hover, .table-hover > tbody > tr.has-warning-hover:hover { background-color: #f8edb5; border-color: #f6e79d; }
-
-.ui-header {
-    background-color: #b51329;
-    border-bottom: 2px solid #27233a;
-    color: #fff;
-    padding: 0.5em 1em;
-}
-
-.controls {
-    float: right;
-    font-size: 80%;
-    padding-top: 0.25em;
-}
-
-.ui-content {
-    padding: 0.5em 1em;
-}
-
-.small-no-wrap {
-    white-space: nowrap;
-    width: 1%;
-}

@@ -51,11 +51,8 @@ function ToggleAutorefresh() {
 // Client Initialization
 $().ready(function () {
     // Setup all click functions
-    $(".js-scroll-row-start").on("click", ToggleAutoscroll);
-    $(".js-scroll-row-stop").on("click", ToggleAutoscroll);
-
-    $(".js-refresh-start").on("click", ToggleAutorefresh);
-    $(".js-refresh-stop").on("click", ToggleAutorefresh).addClass("pointer");
+    $(".js-scroll-row").on("click", ToggleAutoscroll);
+    $(".js-refresh").on("click", ToggleAutorefresh);
 
     ToggleAutoscroll()
     ToggleAutorefresh()
