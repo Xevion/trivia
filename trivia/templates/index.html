@@ -9,6 +9,7 @@
                 integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
         <script>window.jQuery || document.write('<script src="{{
   url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
     </head>
     <body>
         <header class="ui-header">
@@ -52,6 +53,7 @@
                             {% else %}
                                 <td class="ui-silent-row">Team {{ team.id }}</td>
                             {% endif %}
+                            <td class="js-total-score">{{ team.scores | sum }}</td>
                             {% for score in team.scores %}
                                 <td>{{ score }}</td>
                             {% endfor %}
@@ -62,5 +64,4 @@
         </div>
         <footer class="ui-footer"></footer>
     </body>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </html>

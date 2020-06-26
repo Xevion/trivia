@@ -13,6 +13,10 @@ def create_app(env=None):
         env = app.config['ENV']
     app.config.from_object(configs[env])
 
+    # Fixes poor whitespace rendering in templates
+    app.jinja_env.trim_blocks = True
+    app.jinja_env.lstrip_blocks = True
+
     with app.app_context():
         # noinspection PyUnresolvedReferences
         from trivia import routes, api, utils

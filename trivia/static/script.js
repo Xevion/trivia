@@ -14,7 +14,7 @@ let REFRESH_TIMEOUT;
 function ScrollOnce(autoscroll) {
     // If autoscroll has been disabled in between timer, this if statement will prevent it from executing.
     if (AUTOSCROLL)
-        $(".ui-row:first").appendTo("tbody")
+        $(".ui-row:first").appendTo(".js-standings")
 
     // Restart autoscroll as needed.
     if (autoscroll && AUTOSCROLL) {
@@ -49,6 +49,26 @@ function ToggleAutorefresh() {
     } else {
         $(".js-refresh-start").show();
         $(".js-refresh-stop").hide();
+
+        clearTimeout(REFRESH_TIMEOUT);
+    }
+}
+
+function sortUsingNestedText(parent, childSelector, keySelector) {
+    var items = parent.children(childSelector).sort(function(a, b) {
+        var vA = $(keySelector, a).text();
+        var vB = $(keySelector, b).text();
+        return (vA < vB) ? 1 : (vA > vB) ? -1 : 0;
+    });
+    parent.append(items);
+}
+
+// Sorts all Teams, rearranging them by Rank
+function SortTeams(topTeam = 0) {
+    sortUsingNestedText($(".js-standings"), '.ui-row', 'td.js-total-score')
+
+    while($('.js-standings').firstChild.data('row-index') !== topTeam) {
+        $(".ui-row:first").appendTo("tbody")
     }
 }
 
@@ -60,4 +80,5 @@ $().ready(function () {
 
     ToggleAutoscroll()
     ToggleAutorefresh()
+    SortTeams();
 })
