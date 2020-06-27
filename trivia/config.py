@@ -14,6 +14,7 @@ configs = {
 
 class Config(object):
     # Main Configuration
+    APPLICATION_TITLE = 'EfTA Trivia Night'
     SCORE_FILE = 'scores.json'
     POLLING_INTERVAL = 5
     DEBUG = False
@@ -26,7 +27,7 @@ class Config(object):
     DEMO_MAX_SCORES = 0
 
 
-def ConfigDeprecated(Config):
+class ConfigDeprecated(Config):
     CONVERT_OLD = True
 
 

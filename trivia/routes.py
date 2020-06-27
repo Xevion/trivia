@@ -15,4 +15,4 @@ def index():
     """
     from trivia.utils import teams
     scoreCount = max([len(team.scores) for team in teams]) if len(teams) > 0 else 0
-    return render_template('index.html', scoreCount=scoreCount, teams=teams)
+    return render_template('index.html', scoreCount=scoreCount, teams=teams, title=current_app.config['APPLICATION_TITLE'])
