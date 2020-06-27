@@ -9,17 +9,16 @@ body { font-family: Calibri, Arial, sans-serif; margin: 0; padding: 0; position:
 .score-team-name:before { content: "&nbsp;"; visibility: hidden; }
 
 /* Projector View */
-.ui-content { font-size: 300%; padding: 0.25em 0; }
-tr[data-row-index="0"] td { border-top: 0.25em solid #000; }
 
+.ui-content { font-size: 300%; padding: 0.25em 0; }
 .ui-header { background-color: #b51329; border-bottom: 2px solid #27233a; color: #fff; padding: 0.5em 1em; }
 /*.ui-content { padding: 0.5em 1em; }*/
 .ui-footer { }
-.ui-silent-row {color: #7c7c7c
-}
+.ui-silent-row { color: #7c7c7c }
 
 .center { text-align: center; }
 .pointer { cursor: pointer; }
+.left { text-align: left; }
 .right { text-align: right; }
 .rank-pad { padding-left: 0.3em; padding-right: 0.2em;}
 .small-no-wrap { white-space: nowrap; width: 1%; }
@@ -39,3 +38,5 @@ tr[data-row-index="0"] td { border-top: 0.25em solid #000; }
 .table-striped > tbody > tr.has-warning:nth-child(odd) { background-color: #faf2cc; border-color: #f8e5be; }
 .table-hover > tbody > tr:hover { background-color: #e0e0e0; } /* hover needs to come after striped so that striped rows have hover */
 .table-hover > tbody > tr.has-warning:hover, .table-hover > tbody > tr.has-warning-hover:hover { background-color: #f8edb5; border-color: #f6e79d; }
+
+tr[data-row-index="0"] td { border-top: 0.25em solid #000; }

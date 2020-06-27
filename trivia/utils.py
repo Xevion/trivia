@@ -66,6 +66,7 @@ def refreshScores() -> None:
                         scores=team['scores']
                     ) for team in temp
                 ]
+                temp.sort(key=lambda team : sum(team.scores), reverse=True)
                 current_app.logger.debug(f'Successfully loaded ({len(temp)} teams).')
 
                 global teams

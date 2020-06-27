@@ -13,7 +13,7 @@ let REFRESH_TIMEOUT;
 // Scroll table once.
 function ScrollOnce(autoscroll) {
     // If autoscroll has been disabled in between timer, this if statement will prevent it from executing.
-    if (AUTOSCROLL)
+    if (AUTOSCROLL || !autoscroll)
         $(".ui-row:first").appendTo(".js-standings")
 
     // Restart autoscroll as needed.
@@ -55,21 +55,24 @@ function ToggleAutorefresh() {
 }
 
 function sortUsingNestedText(parent, childSelector, keySelector) {
-    var items = parent.children(childSelector).sort(function(a, b) {
-        var vA = $(keySelector, a).text();
-        var vB = $(keySelector, b).text();
+    var items = parent.children(childSelector).sort(function (a, b) {
+        var vA = parseInt($(keySelector, a).text())
+        var vB = parseInt($(keySelector, b).text());
         return (vA < vB) ? 1 : (vA > vB) ? -1 : 0;
     });
     parent.append(items);
 }
 
 // Sorts all Teams, rearranging them by Rank
-function SortTeams(topTeam = 0) {
+function SortTeams(topTeam = 5) {
+    // Sort by total score
     sortUsingNestedText($(".js-standings"), '.ui-row', 'td.js-total-score')
 
-    while($('.js-standings').firstChild.data('row-index') !== topTeam) {
-        $(".ui-row:first").appendTo("tbody")
-    }
+    // Push
+    console.log(parseInt($('.js-standings').find('>:first-child').data('row-index')))
+    // while ( !== topTeam) {
+        // $(".ui-row:first").appendTo("tbody")
+    // }
 }
 
 // Client Initialization
@@ -78,7 +81,7 @@ $().ready(function () {
     $(".js-scroll-row").on("click", ToggleAutoscroll);
     $(".js-refresh").on("click", ToggleAutorefresh);
 
-    ToggleAutoscroll()
-    ToggleAutorefresh()
+    ToggleAutoscroll();
+    ToggleAutorefresh();
     SortTeams();
 })

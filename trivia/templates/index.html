@@ -37,7 +37,7 @@
                     <tr>
                         <th class="small-no-wrap rank-pad">Rank</th>
                         <th class="small-no-wrap">ID</th>
-                        <th>Team Name</th>
+                        <th class="left">Team Name</th>
                         {% for i in range(scoreCount) %}
                             <th class="small-no-wrap">{{ i + 1 }}</th>
                         {% endfor %}
@@ -45,8 +45,8 @@
                 </thead>
                 <tbody class="js-standings">
                     {% for team in teams %}
-                        <tr class="ui-row" data-row-index="{{ team.id }}">
-                            <td>?</td>
+                        <tr class="ui-row" data-row-index="{{ loop.index - 1}}">
+                            <td class="js-rank">?</td>
                             <td>{{ team.id }}</td>
                             {% if team.name | length > 0 %}
                                 <td>{{ team.name }}</td>
@@ -55,7 +55,7 @@
                             {% endif %}
                             <td class="js-total-score">{{ team.scores | sum }}</td>
                             {% for score in team.scores %}
-                                <td>{{ score }}</td>
+                                <td class="small-no-wrap right">{{ score }}</td>
                             {% endfor %}
                         </tr>
                     {% endfor %}
