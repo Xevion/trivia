@@ -1,9 +1,11 @@
+from typing import Optional
+
 from flask import Flask
 from flask_apscheduler import APScheduler
 
 from trivia.config import configs
 
-scheduler: APScheduler = None
+scheduler: Optional[APScheduler] = None
 
 
 def create_app(env=None):

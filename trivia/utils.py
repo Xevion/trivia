@@ -31,9 +31,11 @@ def lastModified() -> float:
     """
     returns epoch time of last modification to the scores file.
     """
-    if current_app.config['DEBUG']:
-        print(datetime.fromtimestamp(os.path.getmtime(SCORES_FILE)), datetime.fromtimestamp(time.time()))
-    return os.path.getmtime(SCORES_FILE)
+    if os.path.exists(SCORES_FILE):
+        if current_app.config['DEBUG']:
+            print(datetime.fromtimestamp(os.path.getmtime(SCORES_FILE)), datetime.fromtimestamp(time.time()))
+        return os.path.getmtime(SCORES_FILE)
+    return -1
 
 
 def refreshScores() -> None:
@@ -66,7 +68,7 @@ def refreshScores() -> None:
                         scores=team['scores']
                     ) for team in temp
                 ]
-                temp.sort(key=lambda team : sum(team.scores), reverse=True)
+                temp.sort(key=lambda team: sum(team.scores), reverse=True)
                 current_app.logger.debug(f'Successfully loaded ({len(temp)} teams).')
 
                 global teams
@@ -91,6 +93,7 @@ def generateDemo() -> None:
         } for i in range(current_app.config['DEMO_TEAM_COUNT'])
     ]
 
+    os.makedirs(DATA_DIR, exist_ok=True)
     with open(SCORES_FILE, 'w') as file:
         json.dump(convertTo(data) if current_app.config['CONVERT_OLD'] else data, file)
 
@@ -106,8 +109,12 @@ def alterDemo() -> None:
 
     with app.app_context():
         current_app.logger.debug('Altering Demo Data...')
-        with open(SCORES_FILE, 'r') as file:
-            data = convertFrom(json.load(file)) if current_app.config['CONVERT_OLD'] else json.load(file)
+
+        if os.path.exists(SCORES_FILE):
+            with open(SCORES_FILE, 'r') as file:
+                data = convertFrom(json.load(file)) if current_app.config['CONVERT_OLD'] else json.load(file)
+        else:
+            data = []
 
         if len(data) > 0:
             if len(data[0]['scores']) >= current_app.config['DEMO_MAX_SCORES']:
