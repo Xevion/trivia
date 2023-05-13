@@ -1,5 +1,10 @@
 # trivia
 
+<div align="center">
+    <img src="./.media/cli.png" alt="Screenshot of CLI Leaderboard" />
+</div>
+
+
 A simple locally hosted Flask webapp supporting Trivia competitions.
 
 ## Setup
