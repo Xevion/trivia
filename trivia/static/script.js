@@ -142,8 +142,9 @@ $().ready(function () {
     $(".js-scroll-row").on("click", ToggleAutoscroll);
     $(".js-refresh").on("click", ToggleAutorefresh);
 
-    // ToggleAutoscroll();
-    // ToggleAutorefresh();
+    ToggleAutoscroll();
+    ToggleAutorefresh();
+
     // sortTeams();
     refresh()
 })
